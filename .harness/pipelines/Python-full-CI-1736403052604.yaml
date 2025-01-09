@@ -56,6 +56,20 @@ pipeline:
                       pytest --cov --cov-report term --cov-report xml:coverage.xml
 
                     intelligenceMode: true
+              - step:
+                  type: Semgrep
+                  name: Semgrep_1
+                  identifier: Semgrep_1
+                  spec:
+                    target:
+                      detection: auto
+                      type: repository
+                    advanced:
+                      log:
+                        level: info
+                      args: {}
+                    mode: orchestration
+                    config: default
           platform:
             os: Linux
             arch: Amd64
