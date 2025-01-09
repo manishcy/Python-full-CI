@@ -35,6 +35,7 @@ pipeline:
                     buildTool: Pytest
                     runOnlySelectedTests: true
                     installPackages:
+                      - python3 -m pip install pytest
                       - pytest-mock
                       - requests
                       - pytest
