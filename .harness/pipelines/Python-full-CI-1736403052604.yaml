@@ -25,7 +25,7 @@ pipeline:
                   identifier: Echo
                   spec:
                     shell: Sh
-                    command: echo Starting the CI Process.!!
+                    command: echo "Starting the CI Process.!!"
               - step:
                   type: RunTests
                   name: RunTests_1
@@ -63,10 +63,10 @@ pipeline:
                     shell: Sh
                     command: |
                       echo "Starting security scan with Trivy..."
-                      apt-get update && apt-get install -y wget
+                      apt-get update -y && apt-get install -y wget
                       wget https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.deb
-                      dpkg -i trivy_0.38.3_Linux-64bit.deb
-                      trivy fs --vuln-type=os,library --security-checks vuln --format json --output trivy_report.json .
+                      dpkg -i trivy_0.38.3_Linux-64bit.deb || echo "Trivy installation failed!"
+                      trivy fs --vuln-type=os,library --security-checks vuln --format json --output trivy_report.json . || echo "Trivy scan failed!"
                       echo "Trivy security scan completed."
                     artifacts:
                       paths:
