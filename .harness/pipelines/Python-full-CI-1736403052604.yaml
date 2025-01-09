@@ -72,6 +72,16 @@ pipeline:
                     advanced:
                       log:
                         level: info
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: ManishDockerConnector
+                    repo: manishcy/harness_app-python_ci
+                    tags:
+                      - v1
+                    caching: true
           platform:
             os: Linux
             arch: Amd64
