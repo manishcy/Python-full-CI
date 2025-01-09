@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_Python_full_CI_1736403055457-pr-trigger-input-set
+  identifier: Build_Python_full_CI_1736403055457prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Manish
+  pipeline:
+    identifier: Build_Python_full_CI_1736403055457
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
