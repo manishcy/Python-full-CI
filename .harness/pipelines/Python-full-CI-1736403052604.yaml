@@ -26,6 +26,20 @@ pipeline:
                   spec:
                     shell: Sh
                     command: echo Starting the CI Process.!!
+              - step:
+                  type: RunTests
+                  name: RunTests_1
+                  identifier: RunTests_1
+                  spec:
+                    language: Python
+                    buildTool: Pytest
+                    runOnlySelectedTests: true
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - test/coverage.xml
+                    enableTestSplitting: false
           platform:
             os: Linux
             arch: Amd64
