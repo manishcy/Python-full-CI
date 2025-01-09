@@ -57,9 +57,9 @@ pipeline:
 
                     intelligenceMode: true
               - step:
-                  type: Semgrep
-                  name: Semgrep_1
-                  identifier: Semgrep_1
+                  type: Gitleaks
+                  name: Gitleaks_1
+                  identifier: Gitleaks_1
                   spec:
                     target:
                       detection: auto
