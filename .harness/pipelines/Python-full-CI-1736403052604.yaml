@@ -42,7 +42,7 @@ pipeline:
                           cat coverage.xml || echo "coverage.xml not found!"
                       artifacts:
                         paths:
-                          - ./test/coverage.xml
+                          - harness/test/coverage.xml
                         continueUponFailure: true
                         failOnError: false
                   - step:
@@ -58,6 +58,8 @@ pipeline:
                           dpkg -i trivy_0.38.3_Linux-64bit.deb || echo "Trivy installation failed!"
                           trivy fs --vuln-type=os,library --security-checks vuln --format json --output trivy_report.json . || echo "Trivy scan failed!"
                           echo "Trivy security scan completed."
+
+                          cat trivy_report.json || echo "trivy_report.json not found!"
                         artifacts:
                           paths:
                             - ./trivy_report.json
