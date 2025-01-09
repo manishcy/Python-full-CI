@@ -27,35 +27,6 @@ pipeline:
                     shell: Sh
                     command: echo "Starting the CI Process.!!"
               - step:
-                  type: RunTests
-                  name: RunTests_1
-                  identifier: RunTests_1
-                  spec:
-                    language: Python
-                    buildTool: Pytest
-                    runOnlySelectedTests: true
-                    installCommands:
-                      - python3 -m pip install pytest
-                      - python3 -m pip install pytest-mock
-                      - python3 -m pip install requests pytest pytest-cov
-                    testCommand: |
-                      python3 -m pytest --cov --cov-report term --cov-report xml:test/coverage.xml
-                    reports:
-                      type: JUnit
-                      spec:
-                        paths:
-                          - test/test/report.xml
-                    coverage:
-                      regex: /TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/
-                    artifacts:
-                      reports:
-                        junit: test/test/report.xml
-                      paths:
-                        - test/coverage.xml
-                    enableTestSplitting: false
-                    continueUponFailure: true
-                    failOnError: false
-              - step:
                   type: Run
                   name: Security Scan with Trivy
                   identifier: Security_Scan_Trivy
@@ -73,6 +44,18 @@ pipeline:
                         - trivy_report.json
                     continueUponFailure: true
                     failOnError: false
+              - step:
+                  type: Test
+                  name: Test_1
+                  identifier: Test_1
+                  spec:
+                    shell: Sh
+                    command: |+
+                      pip install pytest-mock
+                      pip install requests pytest pytest-cov
+                      pytest --cov --cov-report term --cov-report xml:coverage.xml
+
+                    intelligenceMode: true
           platform:
             os: Linux
             arch: Amd64
