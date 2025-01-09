@@ -60,23 +60,18 @@ pipeline:
                     continueUponFailure: true
                     failOnError: false
               - step:
-                  type: Run
-                  name: Security Scan with Snyk
-                  identifier: Security_Scan_Snyk
+                  type: Semgrep
+                  name: Semgrep_1
+                  identifier: Semgrep_1
                   spec:
-                    shell: Sh
-                    command: |
-                      echo "Starting security scan with Snyk..."
-                      curl -sL https://github.com/snyk/snyk/releases/download/v1.120.0/snyk-linux -o snyk-linux
-                      chmod +x snyk-linux
-                      ./snyk-linux auth $SNYK_API_TOKEN
-                      ./snyk-linux test --all-projects --json > snyk_report.json || echo "Snyk scan failed!"
-                      echo "Snyk security scan completed."
-                    artifacts:
-                      paths:
-                        - snyk_report.json
-                    continueUponFailure: true
-                    failOnError: false
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
           platform:
             os: Linux
             arch: Amd64
