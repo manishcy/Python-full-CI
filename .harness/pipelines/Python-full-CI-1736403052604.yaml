@@ -27,6 +27,22 @@ pipeline:
                     shell: Sh
                     command: echo "Starting the CI Process.!!"
               - step:
+                  type: Test
+                  name: Test_1
+                  identifier: Test_1
+                  spec:
+                    shell: Sh
+                    command: |+
+                      pip install pytest-mock
+                      pip install requests pytest pytest-cov
+                      pytest --cov --cov-report term --cov-report xml:coverage.xml
+                      # artifacts:
+                      #   reports:
+                      #     junit: test/test/report.xml
+                      #   paths:
+                      #     - test/coverage.xml
+
+              - step:
                   type: Run
                   name: Security Scan with Trivy
                   identifier: Security_Scan_Trivy
@@ -45,23 +61,25 @@ pipeline:
                     continueUponFailure: true
                     failOnError: false
               - step:
-                  type: Test
-                  name: Test_1
-                  identifier: Test_1
+                  type: Run
+                  name: Security Scan with Snyk
+                  identifier: Security_Scan_Snyk
                   spec:
                     shell: Sh
-                    command: |+
-                      pip install pytest-mock
-                      pip install requests pytest pytest-cov
-                      pytest --cov --cov-report term --cov-report xml:coverage.xml
-                      # artifacts:
-                      #   reports:
-                      #     junit: test/test/report.xml
-                      #   paths:
-                      #     - test/coverage.xml
-
-
-                    intelligenceMode: true
+                    command: |
+                      echo "Starting security scan with Snyk..."
+                      curl -sL https://github.com/snyk/snyk/releases/download/v1.120.0/snyk-linux.zip -o snyk-linux.zip
+                      unzip snyk-linux.zip
+                      chmod +x snyk
+                      ./snyk auth $SNYK_API_TOKEN
+                      ./snyk test --all-projects --json > snyk_report.json || echo "Snyk scan failed!"
+                      echo "Snyk security scan completed."
+                    artifacts:
+                      paths:
+                        - snyk_report.json
+                    continueUponFailure: true
+                    failOnError: false
+                  intelligenceMode: true
           platform:
             os: Linux
             arch: Amd64
