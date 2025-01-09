@@ -72,6 +72,14 @@ pipeline:
                     advanced:
                       log:
                         level: info
+              - step:
+                  type: Run
+                  name: Manual Approval
+                  identifier: Manual_Approval_Step
+                  spec:
+                    description: Waiting for manual approval before proceeding.
+                    timeout: 1200
+                    approvalType: APPROVAL
           platform:
             os: Linux
             arch: Amd64
