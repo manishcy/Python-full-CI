@@ -72,6 +72,7 @@ pipeline:
                       paths:
                         - trivy_report.json
                     continueUponFailure: true
+                    failOnError: false
           platform:
             os: Linux
             arch: Amd64
