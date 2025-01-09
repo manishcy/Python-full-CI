@@ -27,6 +27,16 @@ pipeline:
                     shell: Sh
                     command: echo Starting the CI Process.!!
               - step:
+                  type: Run
+                  name: Debug
+                  identifier: Debug
+                  spec:
+                    shell: Sh
+                    command: |
+                      python3 --version
+                      which python3
+                      python3 -m pip list
+              - step:
                   type: RunTests
                   name: RunTests_1
                   identifier: RunTests_1
@@ -35,11 +45,13 @@ pipeline:
                     buildTool: Pytest
                     runOnlySelectedTests: true
                     installCommands:
+                      - python3 -m pip install --upgrade pip
                       - python3 -m pip install pytest
                       - python3 -m pip install pytest-mock
                       - python3 -m pip install requests pytest pytest-cov
+                      - python3 -m pip list
                     testCommand: |
-                      pytest --cov --cov-report term --cov-report xml:test/coverage.xml
+                      python3 -m pytest --cov --cov-report term --cov-report xml:test/coverage.xml
                     reports:
                       type: JUnit
                       spec:
