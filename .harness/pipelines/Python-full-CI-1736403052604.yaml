@@ -55,21 +55,16 @@ pipeline:
                       pip install requests pytest pytest-cov
                       pytest --cov --cov-report term --cov-report xml:coverage.xml
 
+                      coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+
+                      artifacts:
+                        reports:
+                          junit: test/test/report.xml
+                        paths:
+                          - test/coverage.xml
+
+
                     intelligenceMode: true
-              - step:
-                  type: Gitleaks
-                  name: Gitleaks_1
-                  identifier: Gitleaks_1
-                  spec:
-                    target:
-                      detection: auto
-                      type: repository
-                    advanced:
-                      log:
-                        level: info
-                      args: {}
-                    mode: orchestration
-                    config: default
           platform:
             os: Linux
             arch: Amd64
@@ -77,3 +72,4 @@ pipeline:
             type: Cloud
             spec: {}
         type: CI
+        description: ""
