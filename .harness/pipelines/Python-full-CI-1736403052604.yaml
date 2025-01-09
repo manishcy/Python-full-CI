@@ -109,7 +109,7 @@ pipeline:
                         config: default
                         image:
                           type: local_image
-                          name: harness_app-python_ci
+                          name: manishcy/harness_app-python_ci
                           tag: v1
                   - step:
                       type: Grype
@@ -128,7 +128,7 @@ pipeline:
                         config: default
                         image:
                           type: local_image
-                          name: harness_app-python_ci
+                          name: manishcy/harness_app-python_ci
                           tag: v1
           platform:
             os: Linux
