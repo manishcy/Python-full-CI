@@ -27,21 +27,20 @@ pipeline:
                     shell: Sh
                     command: echo "Starting the CI Process.!!"
               - step:
-                  type: Test
-                  name: Test_1
-                  identifier: Test_1
+                  type: Run
+                  name: Install Dependencies and Run Tests
+                  identifier: Install_Run_Tests
                   spec:
                     shell: Sh
-                    command: |+
-                      pip install pytest-mock
-                      pip install requests pytest pytest-cov
+                    command: |
+                      echo "Installing dependencies and running tests..."
+                      pip install pytest pytest-mock requests pytest-cov
                       pytest --cov --cov-report term --cov-report xml:coverage.xml
-                      # artifacts:
-                      #   reports:
-                      #     junit: test/test/report.xml
-                      #   paths:
-                      #     - test/coverage.xml
-
+                  artifacts:
+                    paths:
+                      - coverage.xml
+                    continueUponFailure: true
+                    failOnError: false
               - step:
                   type: Run
                   name: Security Scan with Trivy
@@ -78,7 +77,6 @@ pipeline:
                         - snyk_report.json
                     continueUponFailure: true
                     failOnError: false
-                  intelligenceMode: true
           platform:
             os: Linux
             arch: Amd64
