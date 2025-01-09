@@ -34,11 +34,25 @@ pipeline:
                     language: Python
                     buildTool: Pytest
                     runOnlySelectedTests: true
+                    installPackages:
+                      - pytest-mock
+                      - requests
+                      - pytest
+                      - pytest-cov
+                    testCommand: |
+                      pytest --cov --cov-report term --cov-report xml:test/coverage.xml
                     reports:
                       type: JUnit
                       spec:
                         paths:
-                          - test/coverage.xml
+                          - test/test/report.xml
+                    coverage:
+                      regex: /TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/
+                    artifacts:
+                      reports:
+                        junit: test/test/report.xml
+                      paths:
+                        - test/coverage.xml
                     enableTestSplitting: false
           platform:
             os: Linux
