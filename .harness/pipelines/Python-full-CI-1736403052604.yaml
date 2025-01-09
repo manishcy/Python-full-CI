@@ -27,8 +27,8 @@ pipeline:
                     shell: Sh
                     command: echo "Starting the CI Process.!!"
               - step:
-                  type: Run
-                  name: Install Dependencies and Run Tests
+                  type: Test
+                  name: Run Tests
                   identifier: Install_Run_Tests
                   spec:
                     shell: Sh
