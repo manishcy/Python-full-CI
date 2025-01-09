@@ -37,6 +37,9 @@ pipeline:
                           echo "Installing dependencies and running tests..."
                           pip install pytest pytest-mock requests pytest-cov
                           pytest --cov --cov-report term --cov-report xml:coverage.xml
+
+                          ls -al
+                          cat coverage.xml || echo "coverage.xml not found!"
                       artifacts:
                         paths:
                           - ./coverage.xml
@@ -60,76 +63,6 @@ pipeline:
                             - ./trivy_report.json
                         continueUponFailure: true
                         failOnError: false
-              - step:
-                  type: Semgrep
-                  name: Semgrep_1
-                  identifier: Semgrep_1
-                  spec:
-                    mode: orchestration
-                    config: default
-                    target:
-                      type: repository
-                      detection: auto
-                    advanced:
-                      log:
-                        level: info
-              - step:
-                  type: BuildAndPushDockerRegistry
-                  name: BuildAndPushDockerRegistry_1
-                  identifier: BuildAndPushDockerRegistry_1
-                  spec:
-                    connectorRef: ManishDockerConnector
-                    repo: manishcy/harness_app-python_ci
-                    tags:
-                      - v1
-                    caching: true
-              - parallel:
-                  - step:
-                      type: Background
-                      name: dind
-                      identifier: dind
-                      spec:
-                        connectorRef: account.harnessImage
-                        image: docker:dind
-                        shell: Sh
-                  - step:
-                      type: AquaTrivy
-                      name: AquaTrivy_1
-                      identifier: AquaTrivy_1
-                      spec:
-                        target:
-                          detection: auto
-                          type: container
-                        advanced:
-                          log:
-                            level: info
-                          args: {}
-                        privileged: true
-                        mode: orchestration
-                        config: default
-                        image:
-                          type: local_image
-                          name: manishcy/harness_app-python_ci
-                          tag: v1
-                  - step:
-                      type: Grype
-                      name: Grype_1
-                      identifier: Grype_1
-                      spec:
-                        target:
-                          detection: auto
-                          type: container
-                        advanced:
-                          log:
-                            level: info
-                          args: {}
-                        privileged: true
-                        mode: orchestration
-                        config: default
-                        image:
-                          type: local_image
-                          name: manishcy/harness_app-python_ci
-                          tag: v1
           platform:
             os: Linux
             arch: Amd64
