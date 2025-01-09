@@ -12,7 +12,7 @@ pipeline:
   stages:
     - stage:
         identifier: build
-        name: build
+        name: Build
         spec:
           caching:
             enabled: true
@@ -27,31 +27,50 @@ pipeline:
                     shell: Sh
                     command: echo Starting the CI Process.!!
               - step:
-                  type: Run
-                  name: Debug
-                  identifier: Debug
-                  spec:
-                    shell: Sh
-                    command: |
-                      python3 --version
-                      which python3
-                      python3 -m pip list
-              - step:
                   type: RunTests
                   name: RunTests_1
                   identifier: RunTests_1
                   spec:
                     language: Python
                     buildTool: Pytest
-                    args: "--cov --cov-report term --cov-report xml:test/coverage.xml"
                     runOnlySelectedTests: true
+                    installCommands:
+                      - apt-get update && apt-get install -y python3 python3-pip
+                      - python3 -m pip install --upgrade pip
+                      - python3 -m pip install pytest pytest-mock requests pytest-cov
+                      - python3 -m pip list
+                    testCommand: |
+                      python3 -m pytest --cov --cov-report term --cov-report xml:test/coverage.xml
                     reports:
                       type: JUnit
                       spec:
                         paths:
                           - test/test/report.xml
-                          - test/coverage.xml
+                    coverage:
+                      regex: /TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/
+                    artifacts:
+                      reports:
+                        junit: test/test/report.xml
+                      paths:
+                        - test/coverage.xml
                     enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Security Scan with Trivy
+                  identifier: Security_Scan_Trivy
+                  spec:
+                    shell: Sh
+                    command: |
+                      echo "Starting security scan with Trivy..."
+                      apt-get update && apt-get install -y wget
+                      wget https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.deb
+                      dpkg -i trivy_0.38.3_Linux-64bit.deb
+                      trivy fs --vuln-type=os,library --security-checks vuln --format json --output trivy_report.json .
+                      echo "Trivy security scan completed."
+                    artifacts:
+                      paths:
+                        - trivy_report.json
+                    continueUponFailure: true
           platform:
             os: Linux
             arch: Amd64
