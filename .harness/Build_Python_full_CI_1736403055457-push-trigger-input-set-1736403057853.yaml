@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_Python_full_CI_1736403055457-push-trigger-input-set
+  identifier: Build_Python_full_CI_1736403055457pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Manish
+  pipeline:
+    identifier: Build_Python_full_CI_1736403055457
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
