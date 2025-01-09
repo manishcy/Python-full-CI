@@ -68,11 +68,10 @@ pipeline:
                     shell: Sh
                     command: |
                       echo "Starting security scan with Snyk..."
-                      curl -sL https://github.com/snyk/snyk/releases/download/v1.120.0/snyk-linux.zip -o snyk-linux.zip
-                      unzip snyk-linux.zip
-                      chmod +x snyk
-                      ./snyk auth $SNYK_API_TOKEN
-                      ./snyk test --all-projects --json > snyk_report.json || echo "Snyk scan failed!"
+                      curl -sL https://github.com/snyk/snyk/releases/download/v1.120.0/snyk-linux -o snyk-linux
+                      chmod +x snyk-linux
+                      ./snyk-linux auth $SNYK_API_TOKEN
+                      ./snyk-linux test --all-projects --json > snyk_report.json || echo "Snyk scan failed!"
                       echo "Snyk security scan completed."
                     artifacts:
                       paths:
