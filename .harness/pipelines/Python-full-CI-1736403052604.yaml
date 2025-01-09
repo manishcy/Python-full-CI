@@ -39,7 +39,7 @@ pipeline:
                           pytest --cov --cov-report term --cov-report xml:coverage.xml
                       artifacts:
                         paths:
-                          - coverage.xml
+                          - ./coverage.xml
                         continueUponFailure: true
                         failOnError: false
                   - step:
@@ -57,7 +57,7 @@ pipeline:
                           echo "Trivy security scan completed."
                         artifacts:
                           paths:
-                            - trivy_report.json
+                            - ./trivy_report.json
                         continueUponFailure: true
                         failOnError: false
               - step:
