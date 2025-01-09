@@ -80,3 +80,10 @@ pipeline:
             spec: {}
         type: CI
         description: ""
+  triggers:
+    - trigger:
+        type: Manual
+        name: Manual Trigger
+        identifier: manual-trigger
+        description: Manually triggered build
+        enabled: true
