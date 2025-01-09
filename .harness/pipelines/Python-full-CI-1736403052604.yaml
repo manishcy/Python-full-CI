@@ -42,7 +42,7 @@ pipeline:
                           cat coverage.xml || echo "coverage.xml not found!"
                       artifacts:
                         paths:
-                          - ./coverage.xml
+                          - ./test/coverage.xml
                         continueUponFailure: true
                         failOnError: false
                   - step:
