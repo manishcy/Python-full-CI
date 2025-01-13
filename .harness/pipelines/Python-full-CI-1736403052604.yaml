@@ -140,3 +140,41 @@ pipeline:
             - /var/run
         type: CI
         description: ""
+    - stage:
+        name: Analyzee
+        identifier: Analyzee
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Sonarqube
+                  name: Sonarqube_1
+                  identifier: Sonarqube_1
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                    auth:
+                      access_token: squ_fd86581cea6c767f869150167d2e360997c3efe8
+                      domain: http://localhost:9000/projects
+                      ssl: false
+                    tool:
+                      project_key: Python-AppHarness
