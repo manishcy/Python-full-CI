@@ -1,6 +1,6 @@
 pipeline:
   identifier: Build_Python_full_CI_1736403055457
-  name: Build Python-full-CI
+  name: Build Python-full-CI with SonarQube
   orgIdentifier: default
   projectIdentifier: Manish
   properties:
@@ -11,24 +11,125 @@ pipeline:
         repoName: Python-full-CI
   stages:
     - stage:
-        name: Analyzee
-        identifier: Analyzee
-        description: ""
-        type: CI
+        identifier: build
+        name: Build
         spec:
-          cloneCodebase: true
           caching:
             enabled: true
-          buildIntelligence:
-            enabled: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Cloud
-            spec: {}
+          cloneCodebase: true
           execution:
             steps:
+              - step:
+                  type: Run
+                  name: Echo
+                  identifier: Echo
+                  spec:
+                    shell: Sh
+                    command: echo "Starting the CI Process.!!"
+              - parallel:
+                  - step:
+                      type: Test
+                      name: Run Tests
+                      identifier: Install_Run_Tests
+                      spec:
+                        shell: Sh
+                        command: |
+                          echo "Installing dependencies and running tests..."
+                          pip install pytest pytest-mock requests pytest-cov
+                          pytest --cov --cov-report term --cov-report xml:coverage.xml
+                      artifacts:
+                        paths:
+                          - coverage.xml
+                        continueUponFailure: true
+                        failOnError: false
+                  - step:
+                      type: Run
+                      name: Security Scan with Trivy
+                      identifier: Security_Scan_Trivy
+                      spec:
+                        shell: Sh
+                        command: |
+                          echo "Starting security scan with Trivy..."
+                          apt-get update -y && apt-get install -y wget
+                          wget https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.deb
+                          dpkg -i trivy_0.38.3_Linux-64bit.deb || echo "Trivy installation failed!"
+                          trivy fs --vuln-type=os,library --security-checks vuln --format json --output trivy_report.json . || echo "Trivy scan failed!"
+                          echo "Trivy security scan completed."
+                        artifacts:
+                          paths:
+                            - trivy_report.json
+                        continueUponFailure: true
+                        failOnError: false
+              - step:
+                  type: Semgrep
+                  name: Semgrep_1
+                  identifier: Semgrep_1
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: ManishDockerConnector
+                    repo: manishcy/harness_app-python_ci
+                    tags:
+                      - v1
+                    caching: true
+              - parallel:
+                  - step:
+                      type: Background
+                      name: dind
+                      identifier: dind
+                      spec:
+                        connectorRef: account.harnessImage
+                        image: docker:dind
+                        shell: Sh
+                  - step:
+                      type: AquaTrivy
+                      name: AquaTrivy_1
+                      identifier: AquaTrivy_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: container
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        privileged: true
+                        mode: orchestration
+                        config: default
+                        image:
+                          type: local_image
+                          name: manishcy/harness_app-python_ci
+                          tag: v1
+                  - step:
+                      type: Grype
+                      name: Grype_1
+                      identifier: Grype_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: container
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        privileged: true
+                        mode: orchestration
+                        config: default
+                        image:
+                          type: local_image
+                          name: manishcy/harness_app-python_ci
+                          tag: v1
               - step:
                   type: Sonarqube
                   name: Sonarqube_1
@@ -48,3 +149,13 @@ pipeline:
                       ssl: false
                     tool:
                       project_key: manish-alm-demo_harness-ci
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          sharedPaths:
+            - /var/run
+        type: CI
+        description: ""
