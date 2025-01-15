@@ -44,7 +44,7 @@ pipeline:
                         level: info
                     auth:
                       access_token: 461c47594ae3f33247eef2707144740613c8f932
-                      domain: ec2-54-226-94-72.compute-1.amazonaws.com:9000
+                      domain: http://ec2-54-226-94-72.compute-1.amazonaws.com:9000
                       ssl: false
                     tool:
                       project_key: HarnessCI
