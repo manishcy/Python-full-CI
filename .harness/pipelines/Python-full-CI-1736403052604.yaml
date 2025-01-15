@@ -43,9 +43,8 @@ pipeline:
                       log:
                         level: info
                     auth:
-                      access_token: 461c47594ae3f33247eef2707144740613c8f932
-                      domain: http://ec2-54-226-94-72.compute-1.amazonaws.com:9000
+                      access_token: f24d5cd96f5eb536aabe2ba2737ce9c93f84aa01
+                      domain: https://sonarcloud.io
                       ssl: false
                     tool:
-                      project_key: HarnessCI
-                    extraArgs: "-Dsonar.organization=gitaction-poc7-sonarqube"
+                      project_key: manish-alm-demo_harness-ci
