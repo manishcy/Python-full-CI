@@ -48,3 +48,4 @@ pipeline:
                       ssl: false
                     tool:
                       project_key: HarnessCI
+                    extraArgs: "-Dsonar.organization=gitaction-poc7-sonarqube"
