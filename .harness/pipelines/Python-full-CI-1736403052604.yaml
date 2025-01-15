@@ -43,8 +43,8 @@ pipeline:
                       log:
                         level: info
                     auth:
-                      access_token: squ_fd86581cea6c767f869150167d2e360997c3efe8
-                      domain: http://172.27.59.67:9000
+                      access_token: 461c47594ae3f33247eef2707144740613c8f932
+                      domain: ec2-54-226-94-72.compute-1.amazonaws.com:9000
                       ssl: false
                     tool:
-                      project_key: Python-AppHarness
+                      project_key: HarnessCI
