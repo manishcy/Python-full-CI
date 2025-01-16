@@ -26,7 +26,7 @@ pipeline:
                   spec:
                     connectorRef: JFROGharness
                     target: https://trialn7qznw.jfrog.io/artifactory/harness-CI/
-                    sourcePath: src/dist/Python_3_tire_applicatoin-0.1.tar.gz
+                    sourcePath: "**/*.tar.gz"
           platform:
             os: Linux
             arch: Amd64
