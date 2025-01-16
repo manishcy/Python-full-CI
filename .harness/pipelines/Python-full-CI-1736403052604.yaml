@@ -25,7 +25,7 @@ pipeline:
                   identifier: ArtifactoryUpload_1
                   spec:
                     connectorRef: JFROGharness
-                    target: https://trialn7qznw.jfrog.io/artifactory/harness-CI/harness_app-python_ci/v1/images/sha256-4dd3494156ae5ecdd34a8efb0c73fcf953e6fe7b4f0bd060e8240ca7061aa680/
+                    target: https://trialn7qznw.jfrog.io/artifactory/harness-ci-jfrog-build-info/
                     sourcePath: "**/*.py"
           platform:
             os: Linux
